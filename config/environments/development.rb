@@ -34,4 +34,7 @@ Gmaps::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  # Mailer setup
+  config.action_mailer.default_url_options = { :host => 'gmaps.dev' }
 end
