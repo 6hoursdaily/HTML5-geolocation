@@ -1,6 +1,8 @@
+<%= content_for :head do %>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=true"></script>
+<%- end %>
+
 <h1>Home#index</h1>
 <p>Find me in app/views/home/index.html.erb</p>
-<%= gmaps(:map_options => {:detect_location => true, :center_on_user => true, :auto_zoom => false, :zoom => 12, :auto_adjust => true}, :markers => {:data => @json} ) %>
-<%= content_for :scripts do %>
-  <%= javascript_include_tag 'gmaps' %>
-<%- end %>
+
+<div id="map_canvas"></div>
