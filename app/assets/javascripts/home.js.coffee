@@ -6,26 +6,16 @@ $(document).ready ->
 
   initialize = ->
 
+    # HTML5 Geolocation handler on page load
+
     if navigator.geolocation
+      # Geolocation Success handler
       navigator.geolocation.getCurrentPosition ((userposition) ->
-        console.log "position:"
-        console.log userposition
         pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
-        console.log "timestamp"
-        console.log new Date(userposition.timestamp)
 
-        console.log "setting mapOptions"
-        mapOptions =
-          zoom: 12,
-          center: pos
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+        setMap(pos)
 
-        console.log "creating Map"
-        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions)
-
-        marker = new google.maps.Marker
-          position: pos
-          map: map
+        setMarker(pos)
 
         infowindow = new google.maps.InfoWindow
           map: map,
@@ -33,26 +23,52 @@ $(document).ready ->
           content: "Your current location as detected"
 
       ), ->
-        handleNoGeolocation true
+        # Geolocation Failure handler
+        handleNoGeolocation(true)
       , { maximumAge: 0, timeout: 5000 }
 
     else
+      # Geolocation Support Failure handler
+      handleNoGeolocation(false)
 
-      handleNoGeolocation false
-
-  handleNoGeolocation = (errorflag) ->
+  # HTML5 Geolocation service failure handler
+  handleNoGeolocation = (errorFlag) ->
     if errorFlag
+      # handler when service failed to detect location
+      console.log "Error: Geolocation service failed"
       content = "Error: Geolocation service failed"
     else
+      # handler when service is not available
+      console.log "Error: Browser geolocation support not available"
       content = "Error: Browser geolocation support not available"
 
+    provisionaryCenter = new google.maps.LatLng(14.5833, 121.0000)
+    setMap(provisionaryCenter)
+    setMarker(provisionaryCenter)
+
+  # Map creator, map center required
+  setMap = (mapCenter) ->
+    # map config, add settings here
+    mapOptions =
+      zoom: 12,
+      center: mapCenter,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+
+    window.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions)
+
+  # Infowindow creator
+  setInfowindow = (content) ->
     options =
       map: map,
-      position: new google.maps.LatLng(60, 105),
       content: content
+    window.infowindow = new google.maps.InfoWindow options
 
-    infowindow = new google.maps.InfoWindow options
-    map.setCenter options.userposition
+  # Marker creator, position required
+  setMarker = (markerCenter) ->
+    marker = new google.maps.Marker
+      position: markerCenter
+      map: map
 
+  # map service boot
   google.maps.event.addDomListener window, "load", initialize()
 
