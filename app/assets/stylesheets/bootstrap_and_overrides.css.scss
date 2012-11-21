@@ -3,7 +3,14 @@ body { padding-top: 60px; }
 @import "bootstrap-responsive";
 
 #map_canvas {
-  height: 600px;
+  height: 300px;
+
+  img {
+    max-width: none;
+    max-height: none;
+    width: auto;
+    display: inline;
+  }
 }
 
 @media print {

@@ -11,6 +11,8 @@ $(document).ready ->
         console.log "position:"
         console.log userposition
         pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
+        console.log "timestamp"
+        console.log new Date(userposition.timestamp)
 
         console.log "setting mapOptions"
         mapOptions =
@@ -21,6 +23,10 @@ $(document).ready ->
         console.log "creating Map"
         map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions)
 
+        marker = new google.maps.Marker
+          position: pos
+          map: map
+
         infowindow = new google.maps.InfoWindow
           map: map,
           position: pos,
@@ -28,7 +34,7 @@ $(document).ready ->
 
       ), ->
         handleNoGeolocation true
-      , {enableHighAccuracy: true, maximumAge: 1000}
+      , { maximumAge: 0, timeout: 5000 }
 
     else
 
