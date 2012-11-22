@@ -34,7 +34,7 @@ $(document).ready ->
         map.setCenter(pos)
         console.log marker
         setMarker(pos)
-        infowindow.setContent "Current position:" + userposition.coords.latitude + ", " + userposition.coords.longitude
+        infowindow.setContent "Current position:" + userposition.coords.latitude + ", " + userposition.coords.longitude + "<br /> As of " + new Date(userposition.timestamp)
         infowindow.setPosition(pos)
       ), ->
         # Geolocation Failure handler
