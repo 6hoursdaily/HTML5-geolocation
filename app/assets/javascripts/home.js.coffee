@@ -18,7 +18,7 @@ $(document).ready ->
 
         setMap(pos)
         setMarker(pos)
-        infowindow = new google.maps.InfoWindow
+        window.infowindow = new google.maps.InfoWindow
           map: map
           position: pos
           content: "Your current location as detected <br /> Accuracy: " + userposition.coords.accuracy + " meters <br /> As of " + new Date(userposition.timestamp)
@@ -31,11 +31,15 @@ $(document).ready ->
       navigator.geolocation.watchPosition ((userposition) ->
         pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
         console.log "Position data:" + userposition.coords.latitude + ", " + userposition.coords.longitude
-        marker.setMap null
-        marker = null
         map.setCenter(pos)
+        console.log marker
         setMarker(pos)
-      )
+        infowindow.setContent "Current position:" + userposition.coords.latitude + ", " + userposition.coords.longitude
+        marker.setMap null
+      ), ->
+        # Geolocation Failure handler
+        handleNoGeolocation(true)
+      , { enableHighAccuracy: true, maximumAge: 10000 } # adjust maximumAge to amount of time the last position is valid
 
     else
       # Geolocation Support Failure handler
