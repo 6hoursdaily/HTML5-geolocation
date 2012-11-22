@@ -11,21 +11,29 @@ $(document).ready ->
     if navigator.geolocation
       # Geolocation Success handler
       navigator.geolocation.getCurrentPosition ((userposition) ->
+        console.log "Browser geolocation supported."
         pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
+        console.log "Position data:"
+        console.log userposition
 
         setMap(pos)
-
         setMarker(pos)
-
         infowindow = new google.maps.InfoWindow
-          map: map,
-          position: pos,
-          content: "Your current location as detected"
+          map: map
+          position: pos
+          content: "Your current location as detected <br /> Accuracy: " + userposition.coords.accuracy + " meters <br /> As of " + new Date(userposition.timestamp)
 
       ), ->
         # Geolocation Failure handler
         handleNoGeolocation(true)
-      , { maximumAge: 0, timeout: 5000 }
+      , { enableHighAccuracy: true, maximumAge: 1000 } # adjust maximumAge to amount of time the last position is valid
+
+      navigator.geolocation.watchPosition ((userposition) ->
+        pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
+        console.log "Position data:" + userposition.coords.latitude + ", " + userposition.coords.longitude
+        marker.setPosition(pos)
+        alert "position changed!"
+      )
 
     else
       # Geolocation Support Failure handler
@@ -50,7 +58,7 @@ $(document).ready ->
   setMap = (mapCenter) ->
     # map config, add settings here
     mapOptions =
-      zoom: 12,
+      zoom: 17,
       center: mapCenter,
       mapTypeId: google.maps.MapTypeId.ROADMAP
 
@@ -65,10 +73,19 @@ $(document).ready ->
 
   # Marker creator, position required
   setMarker = (markerCenter) ->
-    marker = new google.maps.Marker
+    window.marker = new google.maps.Marker
       position: markerCenter
       map: map
 
+  # Geocode Location
+  geoCode = (coords) ->
+    geocoder = new google.maps.Geocoder()
+    geocoder.geocode {'latLng': coords}, (results, status) ->
+      if status == google.maps.GeocoderStatus.OK
+        window.address = results[0].formatted_address
+        console.log "Address: " + address
+
+      else console.log "geocode failed. reason: " + status
+
   # map service boot
   google.maps.event.addDomListener window, "load", initialize()
-
