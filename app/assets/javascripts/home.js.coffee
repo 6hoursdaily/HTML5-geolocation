@@ -26,13 +26,13 @@ $(document).ready ->
       ), ->
         # Geolocation Failure handler
         handleNoGeolocation(true)
-      , { enableHighAccuracy: true, maximumAge: 1000 } # adjust maximumAge to amount of time the last position is valid
+      , { enableHighAccuracy: true, maximumAge: 10000 } # adjust maximumAge to amount of time the last position is valid
 
       navigator.geolocation.watchPosition ((userposition) ->
         pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
         console.log "Position data:" + userposition.coords.latitude + ", " + userposition.coords.longitude
-        marker.setPosition(pos)
-        alert "position changed!"
+        map.setCenter(pos)
+        setMarker(pos)
       )
 
     else
