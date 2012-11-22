@@ -34,6 +34,7 @@ $(document).ready ->
         pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
         console.log "Position data:" + userposition.coords.latitude + ", " + userposition.coords.longitude
         marker.setMap null
+        map.setCenter(pos)
         setMarker(pos)
         infowindow.setContent "Current position:" + userposition.coords.latitude + ", " + userposition.coords.longitude + "<br /> As of " + new Date(userposition.timestamp)
         infowindow.setPosition(pos)
