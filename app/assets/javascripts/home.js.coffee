@@ -31,6 +31,8 @@ $(document).ready ->
       navigator.geolocation.watchPosition ((userposition) ->
         pos = new google.maps.LatLng(userposition.coords.latitude, userposition.coords.longitude)
         console.log "Position data:" + userposition.coords.latitude + ", " + userposition.coords.longitude
+        marker.setMap null
+        marker = null
         map.setCenter(pos)
         setMarker(pos)
       )
